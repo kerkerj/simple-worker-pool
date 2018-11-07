@@ -95,12 +95,12 @@ func TestWorkerPool(t *testing.T) {
 	})
 }
 
-type TestJob2 struct {
+type testJob2 struct {
 	Time    time.Duration
 	Success bool
 }
 
-func (t *TestJob2) Perform() {
+func (t *testJob2) Perform() {
 	time.Sleep(t.Time)
 	t.Success = true
 }
@@ -118,7 +118,7 @@ func TestLotsOfJobs(t *testing.T) {
 			wg.Add(1)
 			go func() {
 				for i := 0; i < 100; i++ {
-					workerPool.JobsInChan <- &TestJob2{
+					workerPool.JobsInChan <- &testJob2{
 						Time: 1*time.Second + time.Duration(i)*time.Millisecond,
 					}
 				}
@@ -132,7 +132,7 @@ func TestLotsOfJobs(t *testing.T) {
 			go func() {
 				for i := 0; i < 100; i++ {
 					data := <-workerPool.ResultOutChan
-					r := data.(*TestJob2)
+					r := data.(*testJob2)
 
 					if !r.Success {
 						hasError = true
